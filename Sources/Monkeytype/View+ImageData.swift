@@ -5,8 +5,6 @@
 import SwiftUI
 
 public extension View {
-
-    @MainActor
     func makeImageData(size: CGSize) -> Data? {
         let imageRenderer = ImageRenderer(content: frame(width: size.width, height: size.height))
         imageRenderer.scale = 4

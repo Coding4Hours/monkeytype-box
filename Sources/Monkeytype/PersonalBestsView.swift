@@ -6,7 +6,6 @@ import SwiftUI
 import AppKit
 
 public struct PersonalBestsView: View {
-
     @State public var personalBestsResponse: PersonalBestsResponse
 
     public init(personalBestsResponse: PersonalBestsResponse) {
@@ -26,7 +25,6 @@ public struct PersonalBestsView: View {
 }
 
 struct PersonalBestView: View {
-
     @State var title: String
     @State var personalBest: PersonalBest?
 
@@ -62,13 +60,11 @@ struct PersonalBestView: View {
     }
 }
 
-@available(macOS 14.0, *)
 #Preview {
     PersonalBestView(title: "15 seconds",
                      personalBest: .mock)
 }
 
-@available(macOS 14.0, *)
 #Preview(traits: .fixedLayout(width: 422, height: 100)) {
     PersonalBestsView(personalBestsResponse: .init(data: ["15": [.mock]]))
 }

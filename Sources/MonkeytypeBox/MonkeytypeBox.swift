@@ -5,12 +5,11 @@
 import SwiftUI
 import Monkeytype
 import ArgumentParser
+import Configuration
 
 @main
 struct MonkeytypeBox: AsyncParsableCommand {
-
     enum Error: Swift.Error {
-
         case noApeKey
         case noImageData
     }
@@ -20,8 +19,10 @@ struct MonkeytypeBox: AsyncParsableCommand {
     @Option(name: [.short, .long], help: "A name for generated image.")
     var outputFile: String
 
+    @MainActor
     mutating func run() async throws {
-        guard let apeKey = ProcessInfo.processInfo.environment["MONKEYTYPE_APE_KEY"] else {
+        let config = ConfigReader(provider: EnvironmentVariablesProvider())
+        guard let apeKey = config.string(forKey: "MONKEYTYPE_APE_KEY") else {
             throw Error.noApeKey
         }
         var request = URLRequest(url: URL(string: "https://api.monkeytype.com/users/personalBests?mode=time")!)
@@ -31,7 +32,7 @@ struct MonkeytypeBox: AsyncParsableCommand {
 
         let personalBestsView = PersonalBestsView(personalBestsResponse: response)
         let size = CGSize(width: 442, height: 100)
-        guard let data = await personalBestsView.makeImageData(size: size) else {
+        guard let data = personalBestsView.makeImageData(size: size) else {
             throw Error.noImageData
         }
 
@@ -42,13 +43,12 @@ struct MonkeytypeBox: AsyncParsableCommand {
 }
 
 extension MonkeytypeBox.Error: CustomStringConvertible {
-
     var description: String {
         switch self {
         case .noApeKey:
-            return "Ape Key is missing"
+            "Ape Key is missing"
         case .noImageData:
-            return "Failed to generate image data"
+            "Failed to generate image data"
         }
     }
 }
